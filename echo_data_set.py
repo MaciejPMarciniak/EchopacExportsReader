@@ -8,6 +8,8 @@ from pathlib import Path
 
 class EchoDataSet:
 
+    SEGMENT_NAMES = []
+
     def __init__(self, path='data', output_path='data', output='all_cases.csv', file_type='xml'):
         self.path = path
         self.output_path = self._check_directory(output_path)
@@ -22,6 +24,17 @@ class EchoDataSet:
         if not os.path.isdir(directory):
             os.mkdir(directory)
         return directory
+
+    def _save_combined_dataset(self, list_of_dfs):
+
+        output_xlsx = self.output.split('.')[0] + '.xlsx'
+        output_csv = self.output.split('.')[0] + '.csv'
+        self.df_all_cases = pd.concat(list_of_dfs)
+        self.df_all_cases.to_csv(os.path.join(self.output_path, output_csv))
+        self.df_all_cases.to_excel(os.path.join(self.output_path, output_xlsx))
+
+    def find_representatives(self, index=''):
+        pass
 
     def build_data_set_from_xml_files(self):
 
@@ -48,14 +61,6 @@ class EchoDataSet:
             data_set.save_global_longitudinal_strains(gls_path=os.path.join(self.path, 'gls'))
 
         self._save_combined_dataset(list_of_dfs)
-
-    def _save_combined_dataset(self, list_of_dfs):
-
-        output_xlsx = self.output.split('.')[0] + '.xlsx'
-        output_csv = self.output.split('.')[0] + '.csv'
-        self.df_all_cases = pd.concat(list_of_dfs)
-        self.df_all_cases.to_csv(os.path.join(self.output_path, output_csv))
-        self.df_all_cases.to_excel(os.path.join(self.output_path, output_xlsx))
 
 
 if __name__ == '__main__':
