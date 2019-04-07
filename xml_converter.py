@@ -3,6 +3,7 @@ import os
 import ntpath
 import pandas as pd
 import numpy as np
+from ntpath import basename
 from xmlutils.xmltable2csv import xmltable2csv
 
 
@@ -46,6 +47,7 @@ class XmlConverter:
                 else:
                     _current_table.append(row)
         self.tables[self.TABLE_NAMES[_table_number]] = _current_table  # last table
+        os.remove(self.csv_file)
 
     # -----ParseListToDataFrames----------------------------------------------------------------------------------------
 
@@ -136,7 +138,9 @@ class XmlConverter:
         self.dataframes['Global Traces'] = [df_global_strain, df_global_work, df_global_fibre_stress]
 
     def _parse_all_tables(self):
-
+        """
+        Get all tables into a single pandas data frame. The result is kept in the self.dataframes structure.
+        """
         self._parse_general()
         self._parse_segments()
         self._parse_all_trace_tables()
@@ -246,5 +250,9 @@ class XmlConverter:
         pat = self.dataframes['General']
         for df in ['Segments', 'Average Frame Rates', 'Strain Descriptors', 'Global Descriptors']:
             pat = pat.merge(self.dataframes[df], left_index=True, right_index=True)
+
+        # It is easier to work with the dataframe with index provided inside the file, however the labels are assigned
+        # to the filenames, hence change in the index:
+        pat.rename(index={self.index[0]: basename(self.xml_file).split('.')[0]}, inplace=True)
 
         return pat
