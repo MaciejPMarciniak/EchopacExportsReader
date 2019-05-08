@@ -4,8 +4,8 @@ import pandas as pd
 import numpy as np
 from xml_converter import XmlConverter
 from single_view_strain_reader import SingleViewStrainReader
-from pathlib import Path
 from sklearn.preprocessing import StandardScaler
+from pathlib import Path
 
 
 class EchoDataSet:
@@ -26,6 +26,7 @@ class EchoDataSet:
         self.files.sort()
         self.df_all_cases = None
         self.df_labels = None
+        self.label_col = None
 
     @staticmethod
     def _check_directory(directory):
@@ -51,32 +52,107 @@ class EchoDataSet:
             except AttributeError:
                 self.build_data_set_from_txt_files()
 
-    def find_representatives(self, features=('MW', 'strain_avc', 'strain_min')):
+    def _get_group_data(self, _df, _feat, _group):
 
+        group = _df[_df[self.label_col] == _group]
+        try:
+            relevant_cols = group[[col for col in group.columns.values if _feat in col]]
+        except TypeError:
+            relevant_cols = group[[col for col in group.columns.values for single_ft in _feat if single_ft in col]]
+
+        return relevant_cols
+
+    def _group_representatives(self, df, feat):
+
+        feature_representatives = {}
+        relevant_cols = self._get_group_data(df, feat)
+
+        for i in df[self.label_col].unique():
+
+            sc = StandardScaler()
+            scaled_cols = sc.fit_transform(relevant_cols)
+            relevant_cols_scaled = pd.DataFrame(scaled_cols, columns=relevant_cols.columns)
+            relevant_cols_scaled['sum_col'] = relevant_cols_scaled.sum(axis=1)
+            feature_representatives[i] = relevant_cols.iloc[np.abs(relevant_cols_scaled['sum_col']).idxmin(), :].name
+
+        return feature_representatives
+
+    def _calculate_17_aha_values(self, segmental_values):
+
+        aha_17 = pd.DataFrame(columns=self.COLUMNS_17)
+
+        segmental_values.columns = [x.split('_')[-1] for x in segmental_values.columns]
+        segmental_values.rename(columns={'Basal Septal': 'Basal Inferoseptal', 'Basal Posterior':'Basal Inferolateral',
+                                         'Basal Lateral': 'Basal Anterolateral', 'Mid Septal': 'Mid Inferoseptal',
+                                         'Mid Posterior': 'Mid Inferolateral', 'Mid Lateral': 'Mid Anterolateral'},
+                                inplace=True)
+
+        for col in aha_17.columns:
+            if ('Basal' in col or 'Mid' in col) and col in segmental_values.columns:
+                aha_17.loc['mean', col] = int(segmental_values.loc['mean', col])
+                aha_17.loc['median', col] = int(segmental_values.loc['median', col])
+
+        for val in ['mean', 'median']:
+            aha_17.loc[val, 'Apical Inferior'] = int((segmental_values.loc[val, 'Apical Inferior'] * 2 +
+                                                      segmental_values.loc[val, 'Apical Posterior']) / 3)
+            aha_17.loc[val, 'Apical Anterior'] = int((segmental_values.loc[val, 'Apical Anterior'] * 2 +
+                                                      segmental_values.loc[val, 'Apical Anteroseptal']) / 3)
+            aha_17.loc[val, 'Apical Septal'] = int((segmental_values.loc[val, 'Apical Septal'] * 2 +
+                                                    segmental_values.loc[val, 'Apical Anteroseptal']) / 3)
+            aha_17.loc[val, 'Apical Lateral'] = int((segmental_values.loc[val, 'Apical Lateral'] * 2 +
+                                                     segmental_values.loc[val, 'Apical Posterior']) / 3)
+            aha_17.loc[val, 'Apex'] = int(segmental_values.loc[val, ['Apical Lateral', 'Apical Septal',
+                                                                     'Apical Anterior', 'Apical Anteroseptal',
+                                                                     'Apical Inferior', 'Apical Posterior']].sum() / 6)
+        return aha_17
+
+    def _find_mean_and_median_for_aha_17(self, df, feat):
+
+        feature_plot_values = {}
+
+        for group in df[self.label_col].unique():
+            relevant_cols = self._get_group_data(df, feat, group)
+            print(relevant_cols)
+            relevant_cols.loc['mean'] = relevant_cols.mean()
+            relevant_cols.loc['median'] = relevant_cols.median()
+            feature_plot_values['group_{}'.format(group)] = \
+                self._calculate_17_aha_values(relevant_cols.loc[['mean', 'median']])
+
+        return feature_plot_values
+
+    def get_17_aha_values(self, features=('MW', 'strain_avc', 'strain_min'), label_col='BSH', representatives=False):
+
+        self.label_col = label_col
         self.df_labels = pd.read_excel(os.path.join(self.input_path, 'List of BSH patients_190_MM.xlsx'), index_col='ID')
         self._get_all_cases_data_frame()
-        df_labelled = self.df_all_cases.join(self.df_labels['BSH'])
+        df_labelled = self.df_all_cases.join(self.df_labels[self.label_col])
         df_labelled.to_excel(os.path.join(self.output_path, 'Labelled.xlsx'))
 
-        representatives = {}
-        for feature in features:
-            feature_unique = feature + '_'
-            feature_representatives = {}
+        result = {}
+        if representatives:
+            for feature in features:
+                feature_unique = feature + '_'
+                result[feature] = self._group_representatives(df_labelled, feature_unique)
+                result['all'] = self._group_representatives(df_labelled, [feat + '_' for feat in features])
 
-            for i in df_labelled.BSH.unique():
-                group = df_labelled[df_labelled.BSH == i]
-                relevant_cols = group[[col for col in group.columns.values if feature_unique in col]]
-                sc = StandardScaler()
-                scaled_cols = sc.fit_transform(relevant_cols)
-                relevant_cols_scaled = pd.DataFrame(scaled_cols, columns=relevant_cols.columns)
-                relevant_cols_scaled['sum_col'] = relevant_cols_scaled.sum(axis=1)
-                feature_representatives[i] = relevant_cols.iloc[np.abs(relevant_cols_scaled['sum_col']).idxmin(), :].name
+            df_reps = pd.DataFrame(result)
+            df_reps.index.name = '0- Ctrl, 1- HTN, 2- HTN+BSH'
+            df_reps.to_excel(os.path.join(self.output_path, 'representatives.xlsx'))
+            return df_reps
 
-            representatives[feature] = feature_representatives
+        else:
+            for feature in features:
+                feature_unique = feature + '_'
+                result[feature] = self._find_mean_and_median_for_aha_17(df_labelled, feature_unique)
 
-        print(representatives['MW'])
-        print(representatives['strain_avc'])
-        print(representatives['strain_min'])
+            df_all_features = pd.DataFrame(columns=self.COLUMNS_17)
+            for feature in features:
+                for group in df_labelled[self.label_col].unique():
+                    df_reps = pd.DataFrame(result[feature]['group_{}'.format(group)])
+                    df_all_features.loc['mean_{}_{}'.format(feature, group)] = df_reps.loc['mean']
+                    df_all_features.loc['median_{}_{}'.format(feature, group)] = df_reps.loc['median']
+            df_all_features.to_excel(os.path.join(self.output_path, 'population_17_AHA.xlsx'))
+            return df_all_features
 
     def build_data_set_from_xml_files(self):
 
@@ -115,4 +191,7 @@ if __name__ == '__main__':
     cases = EchoDataSet(path_to_data, output_path=path_to_output, output='all_cases.csv', file_type='xml')
     # cases.build_data_set_from_xml_files()
     # cases._read_data_frame()
-    cases.find_representatives()
+    # cases.get_17_aha_values()
+
+
+
