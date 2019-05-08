@@ -252,7 +252,7 @@ class XmlConverter:
             pat = pat.merge(self.dataframes[df], left_index=True, right_index=True)
 
         # It is easier to work with the dataframe with index provided inside the file, however the labels are assigned
-        # to the filenames, hence change in the index:
+        # to the file names, hence change in the index:
         pat.rename(index={self.index[0]: basename(self.xml_file).split('.')[0]}, inplace=True)
 
         return pat
