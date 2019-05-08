@@ -77,12 +77,12 @@ class EchoDataSet:
 
         return feature_representatives
 
-    def _calculate_17_aha_values(self, segmental_values):
+    def _calculate_17_aha_values(self, segmental_values, echop=True):
 
         aha_17 = pd.DataFrame(columns=self.COLUMNS_17)
 
         segmental_values.columns = [x.split('_')[-1] for x in segmental_values.columns]
-        segmental_values.rename(columns={'Basal Septal': 'Basal Inferoseptal', 'Basal Posterior':'Basal Inferolateral',
+        segmental_values.rename(columns={'Basal Septal': 'Basal Inferoseptal', 'Basal Posterior': 'Basal Inferolateral',
                                          'Basal Lateral': 'Basal Anterolateral', 'Mid Septal': 'Mid Inferoseptal',
                                          'Mid Posterior': 'Mid Inferolateral', 'Mid Lateral': 'Mid Anterolateral'},
                                 inplace=True)
@@ -93,14 +93,27 @@ class EchoDataSet:
                 aha_17.loc['median', col] = int(segmental_values.loc['median', col])
 
         for val in ['mean', 'median']:
-            aha_17.loc[val, 'Apical Inferior'] = int((segmental_values.loc[val, 'Apical Inferior'] * 2 +
-                                                      segmental_values.loc[val, 'Apical Posterior']) / 3)
-            aha_17.loc[val, 'Apical Anterior'] = int((segmental_values.loc[val, 'Apical Anterior'] * 2 +
-                                                      segmental_values.loc[val, 'Apical Anteroseptal']) / 3)
-            aha_17.loc[val, 'Apical Septal'] = int((segmental_values.loc[val, 'Apical Septal'] * 2 +
-                                                    segmental_values.loc[val, 'Apical Anteroseptal']) / 3)
-            aha_17.loc[val, 'Apical Lateral'] = int((segmental_values.loc[val, 'Apical Lateral'] * 2 +
-                                                     segmental_values.loc[val, 'Apical Posterior']) / 3)
+            if not echop:
+                aha_17.loc[val, 'Apical Inferior'] = int((segmental_values.loc[val, 'Apical Inferior'] * 4 +
+                                                          segmental_values.loc[val, 'Apical Posterior'] +
+                                                          segmental_values.loc[val, 'Apical Septal']) / 6)
+                aha_17.loc[val, 'Apical Anterior'] = int((segmental_values.loc[val, 'Apical Anterior'] * 4 +
+                                                          segmental_values.loc[val, 'Apical Anteroseptal'] +
+                                                          segmental_values.loc[val, 'Apical Lateral']) / 6)
+                aha_17.loc[val, 'Apical Septal'] = int((segmental_values.loc[val, 'Apical Septal'] +
+                                                        segmental_values.loc[val, 'Apical Anteroseptal']) / 2)
+                aha_17.loc[val, 'Apical Lateral'] = int((segmental_values.loc[val, 'Apical Lateral'] +
+                                                         segmental_values.loc[val, 'Apical Posterior']) / 2)
+            else:
+                aha_17.loc[val, 'Apical Inferior'] = int((segmental_values.loc[val, 'Apical Inferior'] * 2 +
+                                                          segmental_values.loc[val, 'Apical Posterior']) / 3)
+                aha_17.loc[val, 'Apical Anterior'] = int((segmental_values.loc[val, 'Apical Anterior'] * 2 +
+                                                          segmental_values.loc[val, 'Apical Anteroseptal']) / 3)
+                aha_17.loc[val, 'Apical Septal'] = int((segmental_values.loc[val, 'Apical Septal'] * 2 +
+                                                        segmental_values.loc[val, 'Apical Anteroseptal']) / 3)
+                aha_17.loc[val, 'Apical Lateral'] = int((segmental_values.loc[val, 'Apical Lateral'] * 2 +
+                                                         segmental_values.loc[val, 'Apical Posterior']) / 3)
+
             aha_17.loc[val, 'Apex'] = int(segmental_values.loc[val, ['Apical Lateral', 'Apical Septal',
                                                                      'Apical Anterior', 'Apical Anteroseptal',
                                                                      'Apical Inferior', 'Apical Posterior']].sum() / 6)
