@@ -15,6 +15,12 @@ class EchoDataSet:
                      'Mid Septal', 'Apical Inferior', 'Apical Posterior', 'Apical Lateral', 'Apical Anterior',
                      'Apical Anteroseptal', 'Apical Septal']
 
+    AHA_17_SEGMENT_NAMES = ['Basal Anterior', 'Basal Anteroseptal', 'Basal Inferoseptal',
+                            'Basal Inferior', 'Basal Inferolateral', 'Basal Anterolateral',
+                            'Mid Anterior', 'Mid Anteroseptal', 'Mid Inferoseptal',
+                            'Mid Inferior', 'Mid Inferolateral', 'Mid Anterolateral',
+                            'Apical Anterior', 'Apical Septal', 'Apical Inferior', 'Apical Lateral', 'Apex']
+
     def __init__(self, input_path='data', output_path='data', output='all_cases.csv', file_type='xml',
                  timings_file=None):
         self.input_path = input_path
@@ -79,7 +85,7 @@ class EchoDataSet:
 
     def _calculate_17_aha_values(self, segmental_values, echop=True):
 
-        aha_17 = pd.DataFrame(columns=self.COLUMNS_17)
+        aha_17 = pd.DataFrame(columns=self.AHA_17_SEGMENT_NAMES)
 
         segmental_values.columns = [x.split('_')[-1] for x in segmental_values.columns]
         segmental_values.rename(columns={'Basal Septal': 'Basal Inferoseptal', 'Basal Posterior': 'Basal Inferolateral',
@@ -158,7 +164,7 @@ class EchoDataSet:
                 feature_unique = feature + '_'
                 result[feature] = self._find_mean_and_median_for_aha_17(df_labelled, feature_unique)
 
-            df_all_features = pd.DataFrame(columns=self.COLUMNS_17)
+            df_all_features = pd.DataFrame(columns=self.AHA_17_SEGMENT_NAMES)
             for feature in features:
                 for group in df_labelled[self.label_col].unique():
                     df_reps = pd.DataFrame(result[feature]['group_{}'.format(group)])
@@ -204,7 +210,7 @@ if __name__ == '__main__':
     cases = EchoDataSet(path_to_data, output_path=path_to_output, output='all_cases.csv', file_type='xml')
     # cases.build_data_set_from_xml_files()
     # cases._read_data_frame()
-    # cases.get_17_aha_values()
+    cases.get_17_aha_values()
 
 
 
