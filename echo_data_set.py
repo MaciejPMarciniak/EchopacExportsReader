@@ -125,7 +125,7 @@ class EchoDataSet:
                                                                      'Apical Inferior', 'Apical Posterior']].sum() / 6)
         return aha_17
 
-    def _find_mean_and_median_for_aha_17(self, df, feat):
+    def _find_mean_and_median_for_aha_plot(self, df, feat, n_segments):
 
         feature_plot_values = {}
 
@@ -134,15 +134,19 @@ class EchoDataSet:
             print(relevant_cols)
             relevant_cols.loc['mean'] = relevant_cols.mean()
             relevant_cols.loc['median'] = relevant_cols.median()
-            feature_plot_values['group_{}'.format(group)] = \
-                self._calculate_17_aha_values(relevant_cols.loc[['mean', 'median']])
+            if n_segments == 17:
+                feature_plot_values['group_{}'.format(group)] = \
+                    self._calculate_17_aha_values(relevant_cols.loc[['mean', 'median']])
+            else:
+                feature_plot_values['group_{}'.format(group)] = relevant_cols.loc[['mean', 'median']].astype(int)
 
         return feature_plot_values
 
-    def get_17_aha_values(self, features=('MW', 'strain_avc', 'strain_min'), label_col='BSH', representatives=False):
+    def get_aha_values(self, features=('MW', 'strain_avc', 'strain_min'), label_col='BSH', representatives=False,
+                          n_segments=17):
 
         self.label_col = label_col
-        self.df_labels = pd.read_excel(os.path.join(self.input_path, 'List of BSH patients_190_MM.xlsx'), index_col='ID')
+        self.df_labels = pd.read_excel(os.path.join(self.input_path, 'MW MR categorization.xlsx'),index_col='ID')
         self._get_all_cases_data_frame()
         df_labelled = self.df_all_cases.join(self.df_labels[self.label_col])
         df_labelled.to_excel(os.path.join(self.output_path, 'Labelled.xlsx'))
@@ -161,16 +165,28 @@ class EchoDataSet:
 
         else:
             for feature in features:
+                print('feature: {}'.format(feature))
                 feature_unique = feature + '_'
-                result[feature] = self._find_mean_and_median_for_aha_17(df_labelled, feature_unique)
+                result[feature] = self._find_mean_and_median_for_aha_plot(df_labelled, feature_unique, n_segments)
 
-            df_all_features = pd.DataFrame(columns=self.AHA_17_SEGMENT_NAMES)
+            if n_segments == 17:
+                df_all_features = pd.DataFrame(columns=self.AHA_17_SEGMENT_NAMES)
+            else:
+                df_all_features = pd.DataFrame(columns=self.SEGMENT_NAMES)
+
             for feature in features:
                 for group in df_labelled[self.label_col].unique():
                     df_reps = pd.DataFrame(result[feature]['group_{}'.format(group)])
+                    group = int(group) if isinstance(group, float) else group
+                    if n_segments == 18:
+                        df_reps.columns = [x.split('_')[-1] for x in df_reps.columns]
                     df_all_features.loc['mean_{}_{}'.format(feature, group)] = df_reps.loc['mean']
                     df_all_features.loc['median_{}_{}'.format(feature, group)] = df_reps.loc['median']
-            df_all_features.to_excel(os.path.join(self.output_path, 'population_17_AHA.xlsx'))
+
+            df_all_features.dropna(axis=0, inplace=True)
+            print(df_all_features)
+            df_all_features.to_excel(os.path.join(self.output_path, 'population_{}_AHA.xlsx'.format(n_segments)))
+
             return df_all_features
 
     def build_data_set_from_xml_files(self):
@@ -203,14 +219,14 @@ class EchoDataSet:
 
 if __name__ == '__main__':
 
-    path_to_data = os.path.join(str(Path.home()), 'Python', 'data', 'parsing_xml', 'data')
-    path_to_output = os.path.join(str(Path.home()), 'Python', 'data', 'parsing_xml', 'output')
-    _timings_file = 'AVC timings for the LV 4C.xlsx'
+    path_to_data = os.path.join(str(Path.home()), 'Python', 'data', 'parsing_xml', 'mitral_regurgitation')
+    path_to_output = os.path.join(str(Path.home()), 'Python', 'data', 'parsing_xml', 'mr_output')
+    # _timings_file = 'AVC timings for the LV 4C.xlsx'
 
     cases = EchoDataSet(path_to_data, output_path=path_to_output, output='all_cases.csv', file_type='xml')
-    # cases.build_data_set_from_xml_files()
+    cases.build_data_set_from_xml_files()
     # cases._read_data_frame()
-    cases.get_17_aha_values()
+    cases.get_aha_values(label_col='HTN', n_segments=17)
 
 
 

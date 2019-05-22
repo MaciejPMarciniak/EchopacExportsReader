@@ -93,6 +93,8 @@ class XmlConverter:
 
         df_segments = pd.DataFrame(_table[1:], columns=_table[0])
         df_segments = df_segments.set_index('')
+        if 'Status' in df_segments.index:
+            df_segments = df_segments.drop(index='Status')
         df_segments = df_segments.astype(float)
         df_segments = self._flatten_df(df_segments)
 
