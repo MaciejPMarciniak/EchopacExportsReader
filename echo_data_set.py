@@ -200,7 +200,7 @@ class EchoDataSet:
 
             list_of_dfs.append(conv.combine_dataframes())
             # conv.save_global_longitudinal_strains(gls_path=self.output_path)
-        self.df_all_cases = pd.concat(list_of_dfs)
+        self.df_all_cases = pd.concat(list_of_dfs, sort=False)
 
         self._save_combined_dataset()
 
