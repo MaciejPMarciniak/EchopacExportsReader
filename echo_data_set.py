@@ -21,14 +21,25 @@ class EchoDataSet:
                             'Mid Inferior', 'Mid Inferolateral', 'Mid Anterolateral',
                             'Apical Anterior', 'Apical Septal', 'Apical Inferior', 'Apical Lateral', 'Apex']
 
-    def __init__(self, input_path='data', output_path='data', output='all_cases.csv', file_type='xml',
+    def __init__(self, input_path='data', output_path='data', output='all_cases.csv', export_file_type='xml',
                  timings_file=None):
+        """
+        Process all EchoPAC exports included in the input_path.
+        :param input_path: Path to the folder with EchoPAC exports
+        :param output_path: Path to a folder where resulting table will be saved
+        :param output: name of the .csv and .xlsx table file
+        :param export_file_type: Type of the exports:
+            xml: full export with work indices calculated,
+            txt: partial export - strain of only one view (4C, 3C or 2C) was exported
+        :param timings_file: An additional file with aortic valve closure timings, used with single-view export to
+        calculate the post-systolic index.
+        """
         self.input_path = input_path
         self.output_path = self._check_directory(output_path)
         self.output = output
         if timings_file is not None:
             self.timings_file = os.path.join(self.input_path, timings_file)
-        self.files = glob.glob(os.path.join(self.input_path, '*.' + file_type))
+        self.files = glob.glob(os.path.join(self.input_path, '*.' + export_file_type))
         self.files.sort()
         self.df_all_cases = None
         self.df_labels = None
@@ -143,10 +154,10 @@ class EchoDataSet:
         return feature_plot_values
 
     def get_aha_values(self, features=('MW', 'strain_avc', 'strain_min'), label_col='BSH', representatives=False,
-                          n_segments=17):
+                          n_segments=17, labels_file=''):
 
         self.label_col = label_col
-        self.df_labels = pd.read_excel(os.path.join(self.input_path, 'MW MR categorization.xlsx'),index_col='ID')
+        self.df_labels = pd.read_excel(os.path.join(self.input_path, labels_file), index_col='ID')
         self._get_all_cases_data_frame()
         df_labelled = self.df_all_cases.join(self.df_labels[self.label_col])
         df_labelled.to_excel(os.path.join(self.output_path, 'Labelled.xlsx'))
@@ -219,14 +230,13 @@ class EchoDataSet:
 
 if __name__ == '__main__':
 
-    path_to_data = os.path.join(str(Path.home()), 'Python', 'data', 'parsing_xml', 'mitral_regurgitation')
-    path_to_output = os.path.join(str(Path.home()), 'Python', 'data', 'parsing_xml', 'mr_output')
+    path_to_data = os.path.join(str(Path.home()), 'Python', 'data', 'parsing_xml', '22 random')
+    path_to_output = os.path.join(str(Path.home()), 'Python', 'data', 'parsing_xml', '22 random', 'output')
     # _timings_file = 'AVC timings for the LV 4C.xlsx'
 
-    cases = EchoDataSet(path_to_data, output_path=path_to_output, output='all_cases.csv', file_type='xml')
-    cases.build_data_set_from_xml_files()
-    # cases._read_data_frame()
-    cases.get_aha_values(label_col='HTN', n_segments=17)
+    cases = EchoDataSet(path_to_data, output_path=path_to_output, output='all_cases.csv', export_file_type='xml')
+    # cases.build_data_set_from_xml_files()
+    cases.get_aha_values(label_col='Classification', n_segments=18, labels_file='Classification.xlsx')
 
 
 

@@ -47,7 +47,7 @@ class XmlConverter:
                 else:
                     _current_table.append(row)
         self.tables[self.TABLE_NAMES[_table_number]] = _current_table  # last table
-        os.remove(self.csv_file)
+        os.remove(self.csv_file)  # Since the kernel function writes the csv be default, it has to be removed
 
     # -----ParseListToDataFrames----------------------------------------------------------------------------------------
 
@@ -249,12 +249,12 @@ class XmlConverter:
         self._find_strain_descriptors()
         self._get_gls_ge()
 
-        pat = self.dataframes['General']
+        all_tables = self.dataframes['General']
         for df in ['Segments', 'Average Frame Rates', 'Strain Descriptors', 'Global Descriptors']:
-            pat = pat.merge(self.dataframes[df], left_index=True, right_index=True)
+            all_tables = all_tables.merge(self.dataframes[df], left_index=True, right_index=True)
 
         # It is easier to work with the dataframe with index provided inside the file, however the labels are assigned
         # to the file names, hence change in the index:
-        pat.rename(index={self.index[0]: basename(self.xml_file).split('.')[0]}, inplace=True)
+        all_tables.rename(index={self.index[0]: basename(self.xml_file).split('.')[0]}, inplace=True)
 
-        return pat
+        return all_tables

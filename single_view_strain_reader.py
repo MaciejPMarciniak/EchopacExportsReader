@@ -14,6 +14,12 @@ class SingleViewStrainReader:
                       'mid_anterolateral', 'basal_anterolateral']
 
     def __init__(self, txt_file, timings_file):
+        """
+        It is possible to export a .txt file from EchoPAC with a single view (4C, 3C or 2C) strain measurements, which
+        can be used for analysis.
+        :param txt_file: .txt file with strain data
+        :param timings_file: .xlsx file with timing of the aortic valve closure
+        """
         self.txt_file = txt_file
         self.timings_file = timings_file
 
@@ -125,6 +131,7 @@ class SingleViewStrainReader:
                                                               self.strain_colors[3]: self.strain_columns[3],
                                                               self.strain_colors[4]: self.strain_columns[4],
                                                               self.strain_colors[5]: self.strain_columns[5]})
+        # Beginning of the cycle:
         r_indexes = self.strain_table.loc[(np.abs(self.strain_table[self.strain_columns[0]]) < 1e-6) &
                                           (np.abs(self.strain_table[self.strain_columns[1]]) < 1e-6) &
                                           (np.abs(self.strain_table[self.strain_columns[2]]) < 1e-6) &
@@ -139,7 +146,10 @@ class SingleViewStrainReader:
 
     # -----ReadingAndSaving---------------------------------------------------------------------------------------------
     def combine_dataframes(self):
-
+        """
+        :return: a data frame with relevant values from the .txt file, as well as segmental value at aortic valve
+        closure, post-systolic index and global strain values.
+        """
         self._txt_to_df()
 
         df_descriptors = pd.DataFrame(index=[self.ID])
