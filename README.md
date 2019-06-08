@@ -6,33 +6,40 @@ analysis. With cases as rows and features as columns, the data set is designed f
 research.
 
 Among the extracted features there are
-# list all indices
-TODO: Put units in all column names
+
  * heart rate,
  * valve opening times,
+ * blood pressure,
+ * ejection fraction
  * global and segmental work indices:
     * myocardial work efficiency,
     * constructive work,
+    * wasted work,
+    * positive work,
     * negative work,
-    * 
-    * 
-    *
-    
+    * Sys(?) constructive work,
+    * Sys(?) wasted work,
+ * post-systolic strain PSS(?),
  * average segmental strain,
  * systolic and diastolic pressure,
  * global and segmental strain measurements,
- * myocardial work indices, 
- 
- * blood pressure,
- * ejection fraction
- * other values embedded in the patient data.
+ * myocardial work indices.
    
-In addition to the raw indices, processed features are included, to provide the user with information relevant for 
+In addition to the raw indices, new features were derived, to provide the user with information relevant for 
 results publication, such as 
- * the post-systolic index,
- * frame rate,
- * minimum strain value,
- * strain value at aortic valve closure.
+ * frame rate for each of the views (4C, 3C, 2C),
+ * segmental post-systolic boolean classification, which indicates whether the minimum strain took place after the 
+ aortic valve closure (AVC),
+ * segmental post-systolic index - ratio between the strain at AVC and the minimum strain,
+ * segmental minimum strain value,
+ * segmental strain value at AVC,
+ * segmental time-to-peak - time from th beginning of the cycle to minimum strain,
+ * segmental time-to-peak ratio - ratio between time-to-peak and cycle duration,
+ * minimum global strain before AVC,
+ * minimum global strain,
+ * time of minimum global strain.
+ 
+ .
 
 # Motivation
 Statistical models rely on the sets of samples to infer the behaviour of similar samples, classifiy them and build
