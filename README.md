@@ -59,7 +59,10 @@ data is saved in the .xml or .txt files, which are not designed for research. Ob
 the structure of these exports, making it difficult to perform comparative studies for clinicians. With this tool, the 
 data is transformed into easily applicable structure at a minimal cost.
 
-# Screenshots (anonymized data)
+# Screenshots 
+All presented screenshot come form randomly created, probable data representing the original exports from the 
+**EchoPAC** software.
+
 ### Input - .xml export file with functional data of a single patient
 The data is provided in a specific XML structure, which is illegible. It is also possible to open the file with
 applications such us MS Excel, as a table. However, population studies on these files would be time-consuming and 
@@ -72,6 +75,15 @@ segmental strain (color-coded).
 ![smooth plots](images/txt_example.png  "Segmental Strain - Echopac version")
 
 ### Output - myocardial function population data
+ID | HR | MVC (ms) | ... | GWE (%) | GWI (mmHg%) |... |  SBP (mmHg) | DBP (mmHg) | MW_Basal Inferior (mmHg%) | MW_Basal Posterior (mmHg%)| ...
+ :---:|:---:|:---:| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---:  
+ABC001 | 63	| 24    | ... | 0.97	| 2054  | ... | 136	| 83	| 1524	| 2234	| ... 
+ACD002 | 77	| 45	| ... | 0.99	| 1725	| ... | 121	| 73	| 1281	| 1875 | ... 
+ADE003 | 79	| 38	| ... | 0.97	| 2262	| ... | 152	| 92	| 1362	| 2893 | ... 
+AEF004	| 65 | 32	| ... | 0.95	| 1254	| ... | 115	| 77	| 1123	| 1490 | ... 
+AFG005	| 67 | 13	| ... | 0.96	| 2032	| ... | 134	| 85	| 1552	| 1750 | ... 
+AGH006	| 84 | 37	| ... | 0.98	| 2472	| ... | 126	| 72	| 2762	| 3312 | ... 
+
 
 
 ### Output - mean and median values of strain and myocardial work in the population
@@ -86,20 +98,24 @@ segmental strain (color-coded).
 
 **Call**
 ```python
-class Cohort(source_path='path_to_data', view='4C', output_path='path_to_store_results', 
-output='name_of_output_file.csv')
+from echo_data_set import EchoDataSet
+path_to_data = 'data/exports'
+path_to_output = 'data/output'
+eds = EchoDataSet(input_path=path_to_data, output_path=path_to_output, output='all_cases.csv', export_file_type='xml')
+   
 ```
 
 **Input**
 
-*source_path*: path to the .csv files containing the myocardial trace obtained with speckle tracing in EchoPAC. 
- 
-
-*view*: the view in which the image was taken; 4-chamber ('4C'), 3-chamber ('3C'), or 2-chamber ('2C') 
+*input_path*: path to the .xml/.txt files containing the exports from **EchoPAC**,
 
  
-*output_path*: path to a folder where the results of computation and plots will be stored 
+*output_path*: path to a folder where the resulting table, the 17 and/or 18 AHA values and group representatives
+will be stored,
 
+*output*: name of the file to which the table is saved,
+
+*export_file_type*: xml or txt, the type of exports from which the data set is created.
  
 **Output** 
 
