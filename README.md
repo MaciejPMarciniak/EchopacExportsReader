@@ -60,10 +60,25 @@ the structure of these exports, making it difficult to perform comparative studi
 data is transformed into easily applicable structure at a minimal cost.
 
 # Screenshots (anonymized data)
-1. xml in the firefox format
-2. xml in the excel format - single patient data, across multiple sheets
-3. txt in notepad - segments named with segments
-4. result - single table 
+### Input - .xml export file with functional data of a single patient
+The data is provided in a specific XML structure, which is illegible. It is also possible to open the file with
+applications such us MS Excel, as a table. However, population studies on these files would be time-consuming and 
+laborious.
+![smooth plots](images/xml_example_gedit.png  "Segmental Strain - Echopac version")
+
+### Input - .txt export file with functional data of a single patient
+Less data is available in the case of a single view export. However, it is still possible to extract the data on
+segmental strain (color-coded).
+![smooth plots](images/txt_example.png  "Segmental Strain - Echopac version")
+
+### Output - myocardial function population data
+
+
+### Output - mean and median values of strain and myocardial work in the population
+
+
+### Output - printed represetnatives of the given patient groups
+
 
 # How2use
 
