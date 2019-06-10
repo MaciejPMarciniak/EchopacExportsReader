@@ -5,8 +5,8 @@ organized table to explore and hypothesize. In explicit, from a given set of .xm
 analysis. With cases as rows and features as columns, the data set is designed for quick exploration and statistical
 research.
 
-Among the extracted features there are
-
+### Extracted features
+From the **EchoPAC** exports, the following parameters are extracted:
  * heart rate,
  * valve opening times,
  * blood pressure,
@@ -26,7 +26,7 @@ Among the extracted features there are
  * myocardial work indices.
    
 In addition to the raw indices, new features were derived, to provide the user with information relevant for 
-results publication, such as 
+results publication, such as:
  * frame rate for each of the views (4C, 3C, 2C),
  * segmental post-systolic boolean classification, which indicates whether the minimum strain took place after the 
  aortic valve closure (AVC),
@@ -39,7 +39,13 @@ results publication, such as
  * minimum global strain,
  * time of minimum global strain.
  
- .
+### Complementary tools
+
+A few additional functions are implemented to ease the visualization and comparative studies. In explicit, the values 
+necessary for createing 17 and 18 AHA polar plots of the left ventricle are provided. The functions build a data frame
+consisting of mean and median values of the parameters of interest, one for each of the 17 or 18 segments. These values
+can be obtained for multiple categorized patient groups. Moreover, the representatives of each group (closest to the
+mean or median with regards to segmental values) can be found
 
 # Motivation
 Statistical models rely on the sets of samples to infer the behaviour of similar samples, classifiy them and build
