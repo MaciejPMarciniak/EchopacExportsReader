@@ -42,7 +42,6 @@ class EchoDataSet:
         self.files = glob.glob(os.path.join(self.input_path, '*.' + export_file_type))
         self.files.sort()
         self.df_all_cases = None
-        self.df_labels = None
         self.label_col = None
 
     @staticmethod
@@ -82,16 +81,14 @@ class EchoDataSet:
     def _group_representatives(self, df, feat):
 
         feature_representatives = {}
-        relevant_cols = self._get_group_data(df, feat)
-
-        for i in df[self.label_col].unique():
+        for group in df[self.label_col].unique():
+            relevant_cols = self._get_group_data(df, feat, group)
 
             sc = StandardScaler()
             scaled_cols = sc.fit_transform(relevant_cols)
             relevant_cols_scaled = pd.DataFrame(scaled_cols, columns=relevant_cols.columns)
             relevant_cols_scaled['sum_col'] = relevant_cols_scaled.sum(axis=1)
-            feature_representatives[i] = relevant_cols.iloc[np.abs(relevant_cols_scaled['sum_col']).idxmin(), :].name
-
+            feature_representatives[group] = relevant_cols.iloc[np.abs(relevant_cols_scaled['sum_col']).idxmin(), :].name
         return feature_representatives
 
     def _calculate_17_aha_values(self, segmental_values, echop=True):
@@ -154,23 +151,28 @@ class EchoDataSet:
         return feature_plot_values
 
     def get_aha_values(self, features=('MW', 'strain_avc', 'strain_min'), label_col='BSH', representatives=False,
-                          n_segments=17, labels_file=''):
+                       n_segments=17, labels_file=''):
 
-        self.label_col = label_col
-        self.df_labels = pd.read_excel(os.path.join(self.input_path, labels_file), index_col='ID')
-        self._get_all_cases_data_frame()
-        df_labelled = self.df_all_cases.join(self.df_labels[self.label_col])
-        df_labelled.to_excel(os.path.join(self.output_path, 'Labelled.xlsx'))
+        if not os.path.exists(os.path.join(self.output_path, 'Labelled.xlsx')):
+            self.label_col = label_col
+            df_labels = pd.read_excel(os.path.join(self.input_path, labels_file), index_col='ID')
+            self._get_all_cases_data_frame()
+            df_labelled = self.df_all_cases.join(df_labels[self.label_col])
+            df_labelled.to_excel(os.path.join(self.output_path, 'Labelled.xlsx'))
+        else:
+            self.label_col = label_col
+            self._get_all_cases_data_frame()
+            df_labelled = pd.read_excel(os.path.join(self.output_path, 'Labelled.xlsx'), index_col='ID')
 
         result = {}
         if representatives:
             for feature in features:
+                print('feautre: {}'.format(feature))
                 feature_unique = feature + '_'
                 result[feature] = self._group_representatives(df_labelled, feature_unique)
-                result['all'] = self._group_representatives(df_labelled, [feat + '_' for feat in features])
-
+            result['all'] = self._group_representatives(df_labelled, [feat + '_' for feat in features])
             df_reps = pd.DataFrame(result)
-            df_reps.index.name = '0- Ctrl, 1- HTN, 2- HTN+BSH'
+            df_reps.index.name = 'Label'
             df_reps.to_excel(os.path.join(self.output_path, 'representatives.xlsx'))
             return df_reps
 
@@ -230,13 +232,14 @@ class EchoDataSet:
 
 if __name__ == '__main__':
 
-    path_to_data = os.path.join(str(Path.home()), 'Python', 'data', 'parsing_xml', '22 random')
-    path_to_output = os.path.join(str(Path.home()), 'Python', 'data', 'parsing_xml', '22 random', 'output')
+    path_to_data = os.path.join(str(Path.home()), 'Python', 'data', 'parsing_xml', 'MW exports')
+    path_to_output = os.path.join(str(Path.home()), 'Python', 'data', 'parsing_xml', 'output')
     # _timings_file = 'AVC timings for the LV 4C.xlsx'
 
     cases = EchoDataSet(path_to_data, output_path=path_to_output, output='all_cases.csv', export_file_type='xml')
     # cases.build_data_set_from_xml_files()
-    cases.get_aha_values(label_col='Classification', n_segments=18, labels_file='Classification.xlsx')
+    cases.get_aha_values(label_col='category', n_segments=18, labels_file='List of patients with MW.xlsx',
+                         representatives=True)
 
 
 

@@ -45,7 +45,7 @@ A few additional functions are implemented to ease the visualization and compara
 necessary for createing 17 and 18 AHA polar plots of the left ventricle are provided. The functions build a data frame
 consisting of mean and median values of the parameters of interest, one for each of the 17 or 18 segments. These values
 can be obtained for multiple categorized patient groups. Moreover, the representatives of each group (closest to the
-mean or median with regards to segmental values) can be found
+mean or median with regards to segmental values) are found.
 
 # Motivation
 Statistical models rely on the sets of samples to infer the behaviour of similar samples, classifiy them and build
@@ -75,7 +75,7 @@ segmental strain (color-coded).
 ![smooth plots](images/txt_example.png  "Segmental Strain - Echopac version")
 
 ### Output - myocardial function population data
-ID | HR | MVC (ms) | ... | GWE (%) | GWI (mmHg%) |... |  SBP (mmHg) | DBP (mmHg) | MW_Basal Inferior (mmHg%) | MW_Basal Posterior (mmHg%)| ...
+ID | HR (1/min) | MVC (ms) | ... | GWE (%) | GWI (mmHg%) |... |  SBP (mmHg) | DBP (mmHg) | MW_Basal Inferior (mmHg%) | MW_Basal Posterior (mmHg%)| ...
  :---:|:---:|:---:| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---:  
 ABC001 | 63	| 24    | ... | 0.97	| 2054  | ... | 136	| 83	| 1524	| 2234	| ... 
 ACD002 | 77	| 45	| ... | 0.99	| 1725	| ... | 121	| 73	| 1281	| 1875 | ... 
@@ -83,14 +83,28 @@ ADE003 | 79	| 38	| ... | 0.97	| 2262	| ... | 152	| 92	| 1362	| 2893 | ...
 AEF004	| 65 | 32	| ... | 0.95	| 1254	| ... | 115	| 77	| 1123	| 1490 | ... 
 AFG005	| 67 | 13	| ... | 0.96	| 2032	| ... | 134	| 85	| 1552	| 1750 | ... 
 AGH006	| 84 | 37	| ... | 0.98	| 2472	| ... | 126	| 72	| 2762	| 3312 | ... 
-
-
+... |... |... |... |... |... |... |... |... |... |... |... 
 
 ### Output - mean and median values of strain and myocardial work in the population
+statistic_parameter_ group label|	Basal Inferior	| Basal Posterior	| Basal Lateral	| Basal Anterior	| Basal Anteroseptal	| Basal Septal	| Mid Inferior	| ...
+:---:|:---:|:---:| :---: | :---: | :---: | :---: | :---: | :---: 
+mean_MW_2	|1878	|2243	|2211	|1855	|1960	|1739	|2088	| ...
+median_MW_2	|1931	|2234	|2179	|1855	|1931	|1693	|2088	| ...
+mean_MW_1	|1753	|2065	|2157	|1834	|1710	|1770	|1997	| ...
+median_MW_1	|1734	|2056	|2275	|1843	|1705	|1770	|1997	| ...
+mean_strain_avc_2	|-17	|-18	|-19	|-17	|-17	|-15	|-20	| ...
+median_strain_avc_2	|-17	|-17	|-19	|-17	|-18	|-14	|-20	| ...
+mean_strain_avc_1	|-18	|-16	|-19	|-18	|-18	|-17	|-22	| ...
+median_strain_avc_1	|-19	|-16	|-18	|-17	|-18	|-17	|-21	| ...
 
 
-### Output - printed represetnatives of the given patient groups
+### Output - printed representatives of the given patient groups
 
+Label | MW | strain_avc | strain_min | all
+:---:|:---:|:---:| :---: | :---: 
+0 | AAA0|AAA1|	AAA2|	AAA1
+1|	BBB0|	BBB1|	BBB2|	BBB3
+2|	CCC0|	CCC1|	CCC2|	CCC0
 
 # How2use
 
@@ -107,18 +121,19 @@ eds = EchoDataSet(input_path=path_to_data, output_path=path_to_output, output='a
 
 **Input**
 
-*input_path*: path to the .xml/.txt files containing the exports from **EchoPAC**,
+*input_path*: path to the folder with .xml/.txt files containing the exports from **EchoPAC**;
 
  
 *output_path*: path to a folder where the resulting table, the 17 and/or 18 AHA values and group representatives
-will be stored,
+will be stored;
 
-*output*: name of the file to which the table is saved,
+*output*: name of the file to which the table is saved;
 
 *export_file_type*: xml or txt, the type of exports from which the data set is created.
  
 **Output** 
 
+An .xlsx or .csv file with the data set of all patients available in the input folder.
 
 ---
 **Methods**
