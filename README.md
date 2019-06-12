@@ -7,37 +7,36 @@ research.
 
 ### Extracted features
 From the **EchoPAC** exports, the following parameters are extracted:
- * heart rate,
- * valve opening times,
- * blood pressure,
- * ejection fraction
- * global and segmental work indices:
-    * myocardial work efficiency,
-    * constructive work,
-    * wasted work,
-    * positive work,
-    * negative work,
-    * Sys(?) constructive work,
-    * Sys(?) wasted work,
- * post-systolic strain PSS(?),
- * average segmental strain,
- * systolic and diastolic pressure,
- * global and segmental strain measurements,
- * myocardial work indices.
+ * Heart rate,
+ * Valve opening times,
+ * Blood pressure,
+ * Ejection fraction
+ * Global and segmental work indices:
+    * Myocardial work efficiency,
+    * Constructive work,
+    * Wasted work,
+    * Positive work,
+    * Negative work,
+    * Systolic constructive work,
+    * Sysystolic wasted work,
+ * Post-systolic strain PSS(?),
+ * Average segmental strain,
+ * Systolic and diastolic pressure,
+ * Global and segmental strain measurements.
    
 In addition to the raw indices, new features were derived, to provide the user with information relevant for 
 results publication, such as:
- * frame rate for each of the views (4C, 3C, 2C),
- * segmental post-systolic boolean classification, which indicates whether the minimum strain took place after the 
+ * Frame rate for each of the views (4C, 3C, 2C),
+ * Segmental post-systolic boolean classification, which indicates whether the minimum strain took place after the 
  aortic valve closure (AVC),
- * segmental post-systolic index - ratio between the strain at AVC and the minimum strain,
- * segmental minimum strain value,
- * segmental strain value at AVC,
- * segmental time-to-peak - time from th beginning of the cycle to minimum strain,
- * segmental time-to-peak ratio - ratio between time-to-peak and cycle duration,
- * minimum global strain before AVC,
- * minimum global strain,
- * time of minimum global strain.
+ * Segmental post-systolic index - ratio between the strain at AVC and the minimum strain,
+ * Segmental minimum strain value,
+ * Segmental strain value at AVC,
+ * Segmental time-to-peak - time from th beginning of the cycle to minimum strain,
+ * Segmental time-to-peak ratio - ratio between time-to-peak and cycle duration,
+ * Minimum global strain before AVC,
+ * Minimum global strain,
+ * Time of minimum global strain.
  
 ### Complementary tools
 
@@ -67,11 +66,13 @@ All presented screenshot come form randomly created, probable data representing 
 The data is provided in a specific XML structure, which is illegible. It is also possible to open the file with
 applications such us MS Excel, as a table. However, population studies on these files would be time-consuming and 
 laborious.
+
 ![smooth plots](images/xml_example_gedit.png  "Segmental Strain - Echopac version")
 
 ### Input - export file in .txt format with functional data of a single patient
 Less data is available in the case of a single view export. However, it is still possible to extract the data on
 segmental strain (color-coded).
+
 ![smooth plots](images/txt_example.png  "Segmental Strain - Echopac version")
 
 ---

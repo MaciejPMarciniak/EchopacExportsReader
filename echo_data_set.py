@@ -233,13 +233,13 @@ class EchoDataSet:
 if __name__ == '__main__':
 
     path_to_data = os.path.join(str(Path.home()), 'Python', 'data', 'parsing_xml', 'MW exports')
-    path_to_output = os.path.join(str(Path.home()), 'Python', 'data', 'parsing_xml', 'output')
+    path_to_output = os.path.join(str(Path.home()), 'Python', 'data', 'parsing_xml', 'MW exports', 'output')
     # _timings_file = 'AVC timings for the LV 4C.xlsx'
 
     cases = EchoDataSet(path_to_data, output_path=path_to_output, output='all_cases.csv', export_file_type='xml')
-    # cases.build_data_set_from_xml_files()
-    cases.get_aha_values(label_col='category', n_segments=18, labels_file='List of patients with MW.xlsx',
-                         representatives=True)
+    cases.build_data_set_from_xml_files()
+    # cases.get_aha_values(label_col='category', n_segments=18, labels_file='List of patients with MW.xlsx',
+    #                      representatives=True)
 
 
 

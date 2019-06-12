@@ -188,6 +188,7 @@ class XmlConverter:
                     'max_gls_time': df.index[df['Global strain'].values == max_global_strain.values][0]}
 
         df_gls = pd.DataFrame(dict_gls)
+        df_gls['max_gls_time'] = int(df_gls['max_gls_time'] * 1000)
         df_gls.set_index(self.dataframes['General'].index, inplace=True)
 
         self.dataframes['Global Descriptors'] = df_gls
@@ -217,6 +218,7 @@ class XmlConverter:
             df.loc['strain_min'] = df.min()
             df.loc['postsys'] = df.loc['ttp'] > avc_view
             df.loc['postsys'] = df.loc['postsys'].astype(bool)
+            df.loc['ttp'] = (df.loc['ttp'] * 1000).astype(int)
 
             df_seg_descriptors = df.iloc[-6:, :]
             df_seg_descriptors = self._flatten_df(df_seg_descriptors)
