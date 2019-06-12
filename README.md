@@ -74,6 +74,9 @@ Less data is available in the case of a single view export. However, it is still
 segmental strain (color-coded).
 ![smooth plots](images/txt_example.png  "Segmental Strain - Echopac version")
 
+---
+---
+
 ### Output - myocardial function population data
 ID | HR (1/min) | MVC (ms) | ... | GWE (%) | GWI (mmHg%) |... |  SBP (mmHg) | DBP (mmHg) | MW_Basal Inferior (mmHg%) | MW_Basal Posterior (mmHg%)| ...
  :---:|:---:|:---:| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---:  
