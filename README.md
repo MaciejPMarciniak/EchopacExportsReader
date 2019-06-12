@@ -157,12 +157,8 @@ build_data_set_from_txt_files()
 Creates the popluation data from the *EchoPAC* exports in txt format (from single view).
 
 ```python
-get_aha_values(label_col='category', n_segments=18, labels_file='List of patients with MW.xlsx',
+get_aha_values(label_col='Classification', n_segments=18, labels_file='List of patients with labels.xlsx',
                          representatives=True)
-"""
-    
-    :return:   
-"""
 ```
 Obtain the mean and median segmental values of parameters of interest, with respect to the patient classes (groups). 
  
