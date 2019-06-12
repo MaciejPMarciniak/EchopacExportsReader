@@ -152,6 +152,17 @@ class EchoDataSet:
 
     def get_aha_values(self, features=('MW', 'strain_avc', 'strain_min'), label_col='BSH', representatives=False,
                        n_segments=17, labels_file=''):
+        """
+        Obtain the mean and median segmental values of parameters of interest, with respect to the patient classes
+        (groups).
+        :param features: parameters to extract
+        :param label_col: name of the column with classification of the patients
+        :param representatives: whether to produce the table of class (group) representative patients
+        :param n_segments: 17 or 18 - as used for creating the AHA plots
+        :param labels_file: name of the file containing patient classification
+        :return: either the list of group representatives or means and medians segmental values of the parameters
+        of interest
+        """
 
         if not os.path.exists(os.path.join(self.output_path, 'Labelled.xlsx')):
             self.label_col = label_col

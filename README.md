@@ -149,16 +149,46 @@ An .xlsx or .csv file with the data set of all patients available in the input f
 ```python
 build_data_set_from_xml_files()
 ```
+Creates the popluation data from the *EchoPAC* exports in xml format (with myocardial work indices).
 
 ```python
 build_data_set_from_txt_files()
 ```
+Creates the popluation data from the *EchoPAC* exports in txt format (from single view).
 
 ```python
-cases.get_aha_values(label_col='category', n_segments=18, labels_file='List of patients with MW.xlsx',
+get_aha_values(label_col='category', n_segments=18, labels_file='List of patients with MW.xlsx',
                          representatives=True)
+"""
+    
+    :return:   
+"""
 ```
-# Credits
+Obtain the mean and median segmental values of parameters of interest, with respect to the patient classes (groups). 
+ 
+Parameters:
+* *features*: parameters to extract 
+* *label_col*: name of the column with classification of the patients
+* *representatives*: whether to produce the table of class (group) representative patients
+* *n_segments*: 17 or 18 - as used for creating the AHA plots
+* *labels_file*: name of the file containing patient classification
 
+Output:
+Either the list of group representatives 
+or means and medians segmental values of the parameters of interest
+
+# Credits
+Journal of American College of Cardiology 2019 Publication:
+*Basal septal hypertrophy – a marker of advanced cardiac impairment in arterial hypertension*
+
+EuroEcho 2019 Abstract:
+*Myocardial work in hypertension and mitral regurgitation- insights from non-invasive assessment of left ventricular 
+pressure-strain relations*
+
+ESC Congress 2019 Abstract:
+*Myocardial work distribution in hypertensive patients with basal septal hypertrophy - a non-invasive assessment with 
+left ventricular pressure-strain relations*
 
 # License
+The code is openly available. If this tool has been useful in your research, please reference this site 
+https://github.com/MaciejPMarciniak/EchopacExportsReader
