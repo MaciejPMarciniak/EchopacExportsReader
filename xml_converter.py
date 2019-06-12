@@ -199,10 +199,6 @@ class XmlConverter:
 
     def _find_strain_descriptors(self):
 
-        # TODO: in trace tables, the time is kept in seconds, yet in the general table, valve actions are given in
-        # TODO milliseconds. It makes sense to bring them to the same unit
-        # TODO IMPORTANT!!! keep the frame rate in mind.
-
         avc = 0.001 * self.dataframes['General'].loc[self.index, 'AVC'].values[0]
         df_segmental = pd.DataFrame(index=self.index)
 

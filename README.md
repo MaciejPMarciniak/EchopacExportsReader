@@ -19,7 +19,7 @@ From the **EchoPAC** exports, the following parameters are extracted:
     * Negative work,
     * Systolic constructive work,
     * Sysystolic wasted work,
- * Post-systolic strain PSS(?),
+ * Post-systolic strain,
  * Average segmental strain,
  * Systolic and diastolic pressure,
  * Global and segmental strain measurements.
@@ -144,7 +144,7 @@ each available patient.
 An .xlsx or .csv file with the data set of all patients available in the input folder.
 
 ---
-###Methods
+### Methods
 
 ```python
 build_data_set_from_xml_files()
