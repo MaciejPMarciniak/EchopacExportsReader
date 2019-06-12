@@ -63,13 +63,13 @@ data is transformed into easily applicable structure at a minimal cost.
 All presented screenshot come form randomly created, probable data representing the original exports from the 
 **EchoPAC** software.
 
-### Input - .xml export file with functional data of a single patient
+### Input - export file in .xml fromat with functional data of a single patient
 The data is provided in a specific XML structure, which is illegible. It is also possible to open the file with
 applications such us MS Excel, as a table. However, population studies on these files would be time-consuming and 
 laborious.
 ![smooth plots](images/xml_example_gedit.png  "Segmental Strain - Echopac version")
 
-### Input - .txt export file with functional data of a single patient
+### Input - export file in .txt format with functional data of a single patient
 Less data is available in the case of a single view export. However, it is still possible to extract the data on
 segmental strain (color-coded).
 ![smooth plots](images/txt_example.png  "Segmental Strain - Echopac version")
@@ -111,14 +111,15 @@ Label | MW | strain_avc | strain_min | all
 
 # How2use
 
-### class Cohort (bsh.py)
+### class EchoDataSet
 
 **Call**
 ```python
 from echo_data_set import EchoDataSet
 path_to_data = 'data/exports'
 path_to_output = 'data/output'
-eds = EchoDataSet(input_path=path_to_data, output_path=path_to_output, output='all_cases.csv', export_file_type='xml')
+eds = EchoDataSet(input_path=path_to_data, output_path=path_to_output, output='all_cases.csv', 
+                  export_file_type='xml', timings_file='timings.xlsx')
    
 ```
 
@@ -132,16 +133,30 @@ will be stored;
 
 *output*: name of the file to which the table is saved;
 
-*export_file_type*: xml or txt, the type of exports from which the data set is created.
+*export_file_type*: xml or txt, the type of exports from which the data set is created;
+
+*timings_file*: used only in the case of txt exports. The file should contain the timings of AVC in milliseconds for
+each available patient.
  
 **Output** 
 
 An .xlsx or .csv file with the data set of all patients available in the input folder.
 
 ---
-**Methods**
+###Methods
 
+```python
+build_data_set_from_xml_files()
+```
 
+```python
+build_data_set_from_txt_files()
+```
+
+```python
+cases.get_aha_values(label_col='category', n_segments=18, labels_file='List of patients with MW.xlsx',
+                         representatives=True)
+```
 # Credits
 
 
