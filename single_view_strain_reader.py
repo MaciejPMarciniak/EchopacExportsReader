@@ -30,6 +30,13 @@ class SingleViewStrainReader:
         self.avc_time = 0
         self.avc_view = 0
 
+    @staticmethod
+    def _check_directory(directory):
+        if not os.path.isdir(directory):
+            os.mkdir(directory)
+            print(directory)
+        return directory
+
     # -----StrainDescriptors--------------------------------------------------------------------------------------------
 
     def _get_avc_time(self):
@@ -155,6 +162,7 @@ class SingleViewStrainReader:
         df_descriptors = pd.DataFrame(index=[self.ID])
         df_descriptors['frame_rate (FPS)'] = self._get_frame_rate()
         df_descriptors = df_descriptors.merge(self._get_segmental_strain_at_avc(), left_index=True, right_index=True)
+        df_descriptors = df_descriptors.merge(self._get_min_strains(), left_index=True, right_index=True)
         df_descriptors = df_descriptors.merge(self._calculate_psi(), left_index=True, right_index=True)
         df_descriptors = df_descriptors.merge(self._get_gls_ge(), left_index=True, right_index=True)
         df_descriptors = df_descriptors.merge(self._get_psi(self.strain_table['GLOBAL']), left_index=True, right_index=True)
@@ -166,6 +174,7 @@ class SingleViewStrainReader:
 
     def save_global_longitudinal_strains(self, gls_path=''):
         gls = self.strain_table['GLOBAL']
+        gls_path = self._check_directory(gls_path)
         gls_xls_file_path = os.path.join(gls_path, str(self.ID) + '_mean_global_traces.xls')
         gls.to_excel(gls_xls_file_path)
         gls_csv_file_path = os.path.join(gls_path, str(self.ID) + '_mean_global_traces.csv')

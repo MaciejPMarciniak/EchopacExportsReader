@@ -83,6 +83,8 @@ class EchoDataSet:
         feature_representatives = {}
         for group in df[self.label_col].unique():
             relevant_cols = self._get_group_data(df, feat, group)
+            print(group)
+            print(relevant_cols)
 
             sc = StandardScaler()
             scaled_cols = sc.fit_transform(relevant_cols)
@@ -102,6 +104,7 @@ class EchoDataSet:
                                 inplace=True)
 
         for col in aha_17.columns:
+            print(segmental_values.columns)
             if ('Basal' in col or 'Mid' in col) and col in segmental_values.columns:
                 aha_17.loc['mean', col] = int(segmental_values.loc['mean', col])
                 aha_17.loc['median', col] = int(segmental_values.loc['median', col])
@@ -243,14 +246,15 @@ class EchoDataSet:
 
 if __name__ == '__main__':
 
-    path_to_data = os.path.join(str(Path.home()), 'Python', 'data', 'parsing_xml', 'MW exports')
-    path_to_output = os.path.join(str(Path.home()), 'Python', 'data', 'parsing_xml', 'MW exports', 'output')
-    # _timings_file = 'AVC timings for the LV 4C.xlsx'
+    path_to_data = os.path.join(str(Path.home()), 'Python', 'data', 'parsing_xml', 'MW exports ESC')
+    path_to_output = os.path.join(str(Path.home()), 'Python', 'data', 'parsing_xml', 'MW exports ESC', 'output')
+    _timings_file = 'AVC timings for the LV 4C v2.xlsx'
 
-    cases = EchoDataSet(path_to_data, output_path=path_to_output, output='all_cases.csv', export_file_type='xml')
-    cases.build_data_set_from_xml_files()
-    # cases.get_aha_values(label_col='category', n_segments=18, labels_file='List of patients with MW.xlsx',
-    #                      representatives=True)
+    cases = EchoDataSet(path_to_data, output_path=path_to_output, output='all_cases.csv', export_file_type='xml',
+                        timings_file=_timings_file)
+    # cases.build_data_set_from_txt_files()
+    cases.get_aha_values(label_col='Category', n_segments=18, labels_file='MW list with categorisation.xlsx',
+                         representatives=False)
 
 
 
