@@ -174,9 +174,9 @@ Either the list of group representatives
 or means and medians segmental values of the parameters of interest
 
 # Credits
-Loncaric F, Nunno L, Mimbrero M, Marciniak M, Fernandes JF, Tirapu L, Fabijanovic D, Sanchis L, Doltra A, Cikes M, Lamata P, Bijnens B, Sitges M. 
-*Basal Ventricular Septal Hypertrophy in Systemic Hypertension.* 
-Am J Cardiol. 2020 May 1;125(9):1339-1346. doi: 10.1016/j.amjcard.2020.01.045. Epub 2020 Feb 8. PMID: 32164912.
+Please quote the following publication:
+
+Loncaric F, Nunno L, Mimbrero M, Marciniak M, Fernandes JF, Tirapu L, Fabijanovic D, Sanchis L, Doltra A, Cikes M, Lamata P, Bijnens B, Sitges M. *Basal Ventricular Septal Hypertrophy in Systemic Hypertension.* Am J Cardiol. 2020 May 1;125(9):1339-1346. doi: 10.1016/j.amjcard.2020.01.045.
 
 # License
 The code is openly available. If this tool has been useful in your research, please reference this site 
