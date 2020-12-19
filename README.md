@@ -174,16 +174,9 @@ Either the list of group representatives
 or means and medians segmental values of the parameters of interest
 
 # Credits
-Journal of American College of Cardiology 2019 Publication:
-*Basal septal hypertrophy – a marker of advanced cardiac impairment in arterial hypertension*
-
-EuroEcho 2019 Abstract:
-*Myocardial work in hypertension and mitral regurgitation- insights from non-invasive assessment of left ventricular 
-pressure-strain relations*
-
-ESC Congress 2019 Abstract:
-*Myocardial work distribution in hypertensive patients with basal septal hypertrophy - a non-invasive assessment with 
-left ventricular pressure-strain relations*
+Loncaric F, Nunno L, Mimbrero M, Marciniak M, Fernandes JF, Tirapu L, Fabijanovic D, Sanchis L, Doltra A, Cikes M, Lamata P, Bijnens B, Sitges M. 
+*Basal Ventricular Septal Hypertrophy in Systemic Hypertension.* 
+Am J Cardiol. 2020 May 1;125(9):1339-1346. doi: 10.1016/j.amjcard.2020.01.045. Epub 2020 Feb 8. PMID: 32164912.
 
 # License
 The code is openly available. If this tool has been useful in your research, please reference this site 
